@@ -29,6 +29,7 @@ api("org.junit.jupiter:junit-jupiter-api:5.10.0")
     //    implementation(libs.annotations)
     //implementation("org.eclipse.jgit:org.eclipse.jgit:6.8.0.202311291450-r")
     implementation("org.eclipse.jgit:org.eclipse.jgit:5.5.+")
+    implementation("org.apache.httpcomponents.client5:httpclient5-fluent:5.1.3")
 //    implementation("org.eclipse.jgit:org.eclipse.jgit:5.6.0.201912101111-r")
 
 }

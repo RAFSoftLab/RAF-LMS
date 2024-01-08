@@ -10,4 +10,5 @@ public class Config {
     public static final String HTTP_LOCAL_PATH_2 = "";
     public static final String HTTP_LOCAL_PATH_3 = "";
     public static final String SSH_LOCAL_PATH_5 = "";
+    public final static String REST_API_BASE_URL = "";
 }
