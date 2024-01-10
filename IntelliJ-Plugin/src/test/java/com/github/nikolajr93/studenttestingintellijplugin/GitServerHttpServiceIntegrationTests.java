@@ -22,7 +22,10 @@ public class GitServerHttpServiceIntegrationTests {
     public void cloneAndPushToRepositoryTest() {
         // Arrange and Act
         var repositoryIsCloned = cloneRepository(Config.SSH_LOCAL_PATH_1);
-        var fileIsPushedToRepo = pushToRepository(Config.SSH_LOCAL_PATH_1);
+        var fileIsPushedToRepo = pushToRepository(
+                Config.SSH_LOCAL_PATH_1,
+                "main",
+                "Initial commit");
 
         // Assert
         assertEquals(fileIsPushedToRepo, true);

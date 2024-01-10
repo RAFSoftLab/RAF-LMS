@@ -13,8 +13,6 @@ import java.io.File;
 import java.io.IOException;
 
 public class GitServerSshService {
-    private static final String FILE_TO_COMMIT = "sample.txt";
-
     public static boolean cloneRepository(String path) {
         try {
             SshSessionFactory sshSessionFactory = SshSessionFactory.getInstance();
@@ -40,22 +38,20 @@ public class GitServerSshService {
         }
     }
 
-    public static boolean pushToRepository(String path) {
-        try {
-            // Open the Git repository
-            try (Git git = Git.open(new File(path))) {
-                // Create or modify files in the working directory
-                createOrUpdateFile(FILE_TO_COMMIT, "Hello, ovo je proba!", path);
+    public static boolean pushToRepository(String path, String branchName, String message) {
+        // Open the Git repository
+        try (Git git = Git.open(new File(path))) {
+            // Stage the changes
+            git.add().addFilepattern(".").call();
+            var branchCommand = git.branchCreate();
+            branchCommand.setName(branchName);
+            branchCommand.call();
 
-                // Stage the changes
-                git.add().addFilepattern(FILE_TO_COMMIT).call();
+            // Create a commit
+            git.commit().setMessage(message).call();
 
-                // Create a commit
-                git.commit().setMessage("Add proba.txt commit").call();
-
-                // Push the commit to the remote repository
-                gitPushToRepository(git);
-            }
+            // Push the commit to the remote repository
+            gitPushToRepository(git);
 
             System.out.println("Commit and push completed successfully.");
             return true;
@@ -63,14 +59,6 @@ public class GitServerSshService {
             System.err.println("Error: " + e.getMessage());
         }
         return false;
-    }
-
-    private static void createOrUpdateFile(String filePath, String content, String path) throws IOException {
-        // Implement your logic to create or update the file
-        // For simplicity, this example writes content to the file
-        try (java.io.FileWriter writer = new java.io.FileWriter(path + File.separator + filePath)) {
-            writer.write(content);
-        }
     }
 
     private static void gitPushToRepository(Git git) throws GitAPIException {
