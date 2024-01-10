@@ -23,7 +23,7 @@ public class GitServerHttpService {
         try {
             Git.cloneRepository()
                     .setURI(Config.HTTP_REPO_URL)
-                    .setDirectory(new File(Config.HTTP_LOCAL_PATH_1))
+                    .setDirectory(new File(Config.SSH_LOCAL_PATH_1))
                     .setCredentialsProvider(new UsernamePasswordCredentialsProvider(
                             Config.SERVER_USERNAME,
                             Config.SERVER_PASSWORD))
@@ -38,7 +38,7 @@ public class GitServerHttpService {
     }
 
     public static void pushToRepository() {
-        try (Git git = Git.open(new File(Config.HTTP_LOCAL_PATH_1))) {
+        try (Git git = Git.open(new File(Config.SSH_LOCAL_PATH_1))) {
             // Generate a sample file
             createSampleFile(git);
 
@@ -65,7 +65,7 @@ public class GitServerHttpService {
 
     private static void createSampleFile(Git git) throws IOException {
         // Create a sample file
-        File sampleFile = new File(Config.HTTP_LOCAL_PATH_1, "sample.txt");
+        File sampleFile = new File(Config.SSH_LOCAL_PATH_1, "sample.txt");
         try (FileWriter writer = new FileWriter(sampleFile)) {
             writer.write("This is a sample file.");
         }
