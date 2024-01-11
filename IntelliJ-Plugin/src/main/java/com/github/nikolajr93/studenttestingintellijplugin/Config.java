@@ -8,3 +8,4 @@ public class Config {
     public static final String SSH_LOCAL_PATH_1 = "C:\\Projects\\GitTest";
     public final static String REST_API_BASE_URL = "";
 }
+

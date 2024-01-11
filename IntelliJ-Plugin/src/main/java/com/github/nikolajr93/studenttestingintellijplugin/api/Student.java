@@ -64,4 +64,16 @@ public class Student {
     public void setIndexNumber(Integer indexNumber) {
         this.indexNumber = indexNumber;
     }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", startYear='" + startYear + '\'' +
+                ", studyProgram='" + studyProgram + '\'' +
+                ", indexNumber=" + indexNumber +
+                '}';
+    }
 }

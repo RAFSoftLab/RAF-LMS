@@ -23,13 +23,20 @@ repositories {
 
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
-api("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    api("org.junit.jupiter:junit-jupiter-api:5.10.0")
     implementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
     //implementation("com.jcraft:jsch:0.1.55")
     //    implementation(libs.annotations)
     //implementation("org.eclipse.jgit:org.eclipse.jgit:6.8.0.202311291450-r")
-    implementation("org.eclipse.jgit:org.eclipse.jgit:5.5.+")
-    implementation("org.apache.httpcomponents.client5:httpclient5-fluent:5.1.3")
+//    implementation("org.eclipse.jgit:org.eclipse.jgit:5.5.+")
+    implementation("org.eclipse.jgit:org.eclipse.jgit:5.5.+"){
+        exclude(group = "org.slf4j")
+    }
+//    Old version
+//    implementation("org.apache.httpcomponents.client5:httpclient5-fluent:5.1.3")
+//    implementation("org.apache.httpcomponents.client5:httpclient5-fluent:5.1.3") {
+//        exclude(group = "org.slf4j")
+//    }
 //    implementation("org.eclipse.jgit:org.eclipse.jgit:5.6.0.201912101111-r")
 
 }
