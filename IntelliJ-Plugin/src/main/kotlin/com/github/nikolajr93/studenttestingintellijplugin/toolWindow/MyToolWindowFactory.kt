@@ -110,7 +110,7 @@ class MyToolWindowFactory : ToolWindowFactory {
 
             //  Prints info about the student with ID = 1
             // Call the getStudent method from the RafApiClient Java class
-            val studentJson = RafApiClient.getStudent(1)
+            val studentJson = RafApiClient.getStudent("1")
 
             // Parse the returned JSON into a Student object
             val student = Gson().fromJson(studentJson, Student::class.java)
@@ -207,7 +207,7 @@ class MyToolWindowFactory : ToolWindowFactory {
 //            if (ProjectManager.getInstance().openProjects.any { it.basePath?.contains(Config.SSH_LOCAL_PATH_1) == true }) {
             if (ProjectManager.getInstance().openProjects.any { it.basePath?.contains("GitTest") == true }) {
 //                mainPanel.add(afterClonedPanel)
-                val studentJson = RafApiClient.getStudent(1)
+                val studentJson = RafApiClient.getStudent("1")
                 val student = Gson().fromJson(studentJson, Student::class.java)
                 // Display the student information in the plugin window
                 outputArea.text = "Student info: \n ${student}"

@@ -9,14 +9,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RafApiIntegrationTests {
 
-    public static final int DUMMY_ID = 100;
+    public static final String DUMMY_ID = "MSI10002050";
     public static final Student MOCK_STUDENT = new Student(
-            DUMMY_ID,
             "Foo",
             "Bar",
+            1000,
             "2050",
-            "Master",
-            1000);
+            "120",
+            "SI",
+            "M");
 
     @Test
     public void getStudents_returnsStudents() throws IOException {
