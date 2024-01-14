@@ -56,6 +56,33 @@ public class RafApiIntegrationTests {
     }
 
     @Test
+    public void taskIsCloned_clonedTaskSuccessfully() throws IOException {
+        // Arrange
+        RafApiClient.createStudent(MOCK_STUDENT);
+        var examInfo = new ExamInfo("21", "RAF10");
+
+        // Act
+        var student = RafApiClient.taskIsCloned(DUMMY_ID, examInfo);
+
+        // Assert
+        assertNotNull(student);
+        RafApiClient.deleteStudent(DUMMY_ID);
+    }
+
+    @Test
+    public void taskIsSubmitted_submitsTaskSuccessfully() throws IOException {
+        // Arrange
+        RafApiClient.createStudent(MOCK_STUDENT);
+        var taskSubmissionInfo = new TaskSubmissionInfo("MSI312024-fork");
+
+        // Act
+        var student = RafApiClient.taskIsSubmitted(DUMMY_ID, taskSubmissionInfo);
+
+        // Assert
+        assertNotNull(student);
+        RafApiClient.deleteStudent(DUMMY_ID);    }
+
+    @Test
     public void deleteStudent_deletesStudentSuccessfully() throws IOException {
         // Arrange
         RafApiClient.createStudent(MOCK_STUDENT);

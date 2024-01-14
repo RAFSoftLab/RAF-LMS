@@ -6,6 +6,11 @@ public class ExamInfo {
 
     public ExamInfo() {}
 
+    public ExamInfo(String taskGroup, String classroom) {
+        this.taskGroup = taskGroup;
+        this.classroom = classroom;
+    }
+
     public String getTaskGroup() {
         return taskGroup;
     }

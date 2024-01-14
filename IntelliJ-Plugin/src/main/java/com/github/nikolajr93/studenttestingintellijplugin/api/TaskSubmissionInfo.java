@@ -5,6 +5,10 @@ public class TaskSubmissionInfo {
 
     public TaskSubmissionInfo() {}
 
+    public TaskSubmissionInfo(String forkName) {
+        this.forkName = forkName;
+    }
+
     public String getForkName() {
         return forkName;
     }

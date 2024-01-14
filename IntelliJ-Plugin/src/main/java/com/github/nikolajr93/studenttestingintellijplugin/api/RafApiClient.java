@@ -65,6 +65,46 @@ public class RafApiClient {
         }
     }
 
+    public static String taskIsCloned(String id, ExamInfo examInfo) {
+        String result = null;
+        try {
+            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            String json = ow.writeValueAsString(examInfo);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(Config.REST_API_BASE_URL + "/" + id + "/task_cloned"))
+                    .POST(HttpRequest.BodyPublishers.ofString(json))
+                    .header("Content-Type", "application/json")
+                    .build();
+
+            HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+            result = response.body();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public static String taskIsSubmitted(String id, TaskSubmissionInfo taskSubmissionInfo) {
+        String result = null;
+        try {
+            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            String json = ow.writeValueAsString(taskSubmissionInfo);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(Config.REST_API_BASE_URL + "/" + id + "/task_submitted"))
+                    .POST(HttpRequest.BodyPublishers.ofString(json))
+                    .header("Content-Type", "application/json")
+                    .build();
+
+            HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+            result = response.body();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     public static String deleteStudent(String id) {
         try {
             HttpRequest request = HttpRequest.newBuilder()
