@@ -30,7 +30,7 @@ dependencies {
     //implementation("org.eclipse.jgit:org.eclipse.jgit:6.8.0.202311291450-r")
 //    implementation("org.eclipse.jgit:org.eclipse.jgit:5.5.+")
     implementation("org.eclipse.jgit:org.eclipse.jgit:5.5.+"){
-        exclude(group = "org.slf4j")
+//        exclude(group = "org.slf4j")
     }
 //    Old version
 //    implementation("org.apache.httpcomponents.client5:httpclient5-fluent:5.1.3")
