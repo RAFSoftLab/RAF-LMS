@@ -23,3 +23,5 @@ Dva ključna tipa korisnika sistema su student i nastavnik.
 ## Dijagram arhitekture
 
 ![Početni dijagram arhitekture sistema](https://github.com/RAFSoftLab/RAF-LMS/assets/37117249/f6e4e5ee-6d56-477d-a4ed-0f7f70e09d5c)
+
+![image](https://github.com/RAFSoftLab/RAF-LMS/assets/43738975/a7d43947-c50b-4bc6-8909-bb9387a438f6)
