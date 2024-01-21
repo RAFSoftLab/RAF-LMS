@@ -28,8 +28,7 @@ Dva ključna tipa korisnika sistema su student i nastavnik.
 
 ## Tabele u bazi
 
-![image](https://github.com/RAFSoftLab/RAF-LMS/assets/43738975/ecbf9d45-c3c7-48d8-a7be-a4fe8b59e7de)
-
+![image](https://github.com/RAFSoftLab/RAF-LMS/assets/43738975/2d528f90-c496-4a69-9daa-182809a4ad5d)
 
 ## Uputstvo za postavljanje git http servera
 
