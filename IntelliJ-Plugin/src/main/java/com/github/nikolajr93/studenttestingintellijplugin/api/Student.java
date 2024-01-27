@@ -1,7 +1,6 @@
 package com.github.nikolajr93.studenttestingintellijplugin.api;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class Student {
     private String id;
@@ -12,10 +11,9 @@ public class Student {
     private String studiesGroup;
     private String taskGroup;
     private boolean taskCloned;
-    private LocalDateTime taskClonedTime;
+    private Timestamp taskClonedTime;
     private boolean taskSubmitted;
-    private LocalDateTime taskSubmittedTime;
-    private String major;
+    private Timestamp taskSubmittedTime;
     private String studyProgram;
     private String classroom;
     private String forkName;
@@ -29,15 +27,13 @@ public class Student {
             Integer indexNumber,
             String startYear,
             String studiesGroup,
-            String major,
             String studyProgram) {
-        this.id = studyProgram+major+indexNumber+startYear;
+        this.id = studyProgram+indexNumber+startYear;
         this.firstName = firstName;
         this.lastName = lastName;
         this.indexNumber = indexNumber;
         this.startYear = startYear;
         this.studiesGroup = studiesGroup;
-        this.major = major;
         this.studyProgram = studyProgram;
     }
 
@@ -113,11 +109,11 @@ public class Student {
         this.taskCloned = taskCloned;
     }
 
-    public LocalDateTime getTaskClonedTime() {
+    public Timestamp getTaskClonedTime() {
         return taskClonedTime;
     }
 
-    public void setTaskClonedTime(LocalDateTime taskClonedTime) {
+    public void setTaskClonedTime(Timestamp taskClonedTime) {
         this.taskClonedTime = taskClonedTime;
     }
 
@@ -129,20 +125,12 @@ public class Student {
         this.taskSubmitted = taskSubmitted;
     }
 
-    public LocalDateTime getTaskSubmittedTime() {
+    public Timestamp getTaskSubmittedTime() {
         return taskSubmittedTime;
     }
 
-    public void setTaskSubmittedTime(LocalDateTime taskSubmittedTime) {
+    public void setTaskSubmittedTime(Timestamp taskSubmittedTime) {
         this.taskSubmittedTime = taskSubmittedTime;
-    }
-
-    public String getMajor() {
-        return major;
-    }
-
-    public void setMajor(String major) {
-        this.major = major;
     }
 
     public String getClassroom() {
@@ -185,8 +173,6 @@ public class Student {
                 "\"" + taskSubmitted + "\"" +
                 ", \"taskSubmittedTime\" :" +
                 "\"" + taskSubmittedTime + "\"" +
-                ", \"major\" :" +
-                "\"" + major + "\"" +
                 ", \"studyProgram\" :" +
                 "\"" + studyProgram + "\"" +
                 ", \"classroom\" :" +

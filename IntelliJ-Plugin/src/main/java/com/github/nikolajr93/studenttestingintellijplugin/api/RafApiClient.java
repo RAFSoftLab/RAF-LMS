@@ -45,7 +45,6 @@ public class RafApiClient {
         try {
             newStudent.setId(
                     newStudent.getStudyProgram()
-                            +newStudent.getMajor()
                             +newStudent.getIndexNumber()
                             +newStudent.getStartYear());
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
