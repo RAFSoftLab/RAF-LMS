@@ -21,24 +21,10 @@ repositories {
     mavenCentral()
 }
 
-
-//configurations {
-//    all {
-//        exclude(group = "org.slf4j", module = "slf4j-log4j12")
-//    }
-//}
-
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
     api("org.junit.jupiter:junit-jupiter-api:5.10.0")
     implementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
-    // https://mvnrepository.com/artifact/org.jsmart/zerocode-tdd
-    implementation("org.jsmart:zerocode-tdd:1.3.35")
-    // https://mvnrepository.com/artifact/io.rest-assured/rest-assured
-    testImplementation("io.rest-assured:rest-assured:3.0.0")
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-
-
     //implementation("com.jcraft:jsch:0.1.55")
     //    implementation(libs.annotations)
     //implementation("org.eclipse.jgit:org.eclipse.jgit:6.8.0.202311291450-r")
