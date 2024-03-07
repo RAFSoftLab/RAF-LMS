@@ -203,6 +203,98 @@ Kako biste mogli da commitujete na server, izvrsite sledecu komandu:
 git remote add origin http://foo@SERVER_IP/project1.git
 ````
 
+## Uputstvo za isporučivanje Plagina za IntelliJ IDEA
 
+### Sadržaj
+
+1. [Postavljanje Strukture Projekta](#postavljanje-strukture-projekta)
+2. [Dodavanje Zavisnosti u Vaš Plagin](#dodavanje-zavisnosti-u-vaš-plagin)
+3. [Uključivanje Zavisnosti u .jar Plagina](#uključivanje-zavisnosti-u-jar-plagina)
+4. [Rešavanje Problema sa Dupliciranim Unosima Fajlova](#rešavanje-problema-sa-dupliciranim-unosima-fajlova)
+5. [Izgradnja instalacije Plagina](#izrada-pluga)
+
+### Postavljanje Strukture Projekta
+
+Nakon kreiranja projekta, potrebno je postaviti strukturu projekta na sledeći način:
+
+1. U IntelliJ IDEA, idite na `File -> Project Structure`.
+2. U prozoru Project Structure, kliknite na `Modules` u levom oknu.
+3. Izaberite svoj projektni modul.
+4. U desnom oknu, kliknite na tab `Dependencies`.
+5. Kliknite na dugme `+` i izaberite opciju `JARs or directories...`.
+6. Idite do direktorijuma `lib` unutar direktorijuma gde vam je instaliran IntelliJ IDEA i izaberite jar fajlove, zatim kliknite `OK`.
+
+#### Postavljanje IntelliJ Platform Plugin SDK
+
+1. Ponovo idite na `File -> Project Structure -> SDKs` (u levom oknu).
+2. Kliknite na ikonu `+` na vrhu okna SDKs i izaberite opciju `IntelliJ Platform Plugin SDK`.
+3. Popunite lokaciju korenskog direktorijuma instalacije vašeg IntelliJ IDEA i kliknite `OK`.
+
+#### Provera Lokacije plugin.xml
+
+Vaš plugin.xml fajl je potrebno da se nalazi u resources/META-INF/ direktorijumu vašeg modula. Ako se ne nalazi, premestite ga tamo.
+
+#### Ažuriranje module.iml (ukoliko je moduel.iml prisutan)
+
+U korenskom direktorijumu vašeg projekta, imate .iml fajl koji se zove isto kao vaš projektni modul.
+1. Otvorite ovaj fajl i pronađite sledeću liniju:
+   `<module type="JAVA_MODULE" version="4">`
+2. Ako postoji, zamenite `JAVA_MODULE` sa `PLUGIN_MODULE`, tako da imate:
+   `<module type="PLUGIN_MODULE" version="4">`
+
+### Dodavanje Zavisnosti u Vaš Plagin
+
+Nastavite odakle smo stali i dodajte neophodne zavisnosti u build.gradle.kts ili build.gradle fajl u korenskom direktorijumu vašeg projekta.
+
+1. Otvorite fajl `build.gradle.kts` u vašem projektu.
+2. Pronađite odeljak `dependencies`.
+3. Dodajte novu liniju u ovom odeljku za vašu zavisnost.
+
+Primer dodavanja zavisnosti izgleda ovako:
+```kotlin
+dependencies {
+    implementation("org.eclipse.jgit:org.eclipse.jgit:5.5.+"){
+        exclude(group = "org.slf4j")
+    }
+}
+```
+
+### Uključivanje Zavisnosti u .jar Plagina
+
+Izmenite vaš build.gradle.kts skript da uključuje ove zavisnosti prilikom izgradnje .jar fajla.
+
+```kotlin
+tasks {
+    jar {
+        from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+    }
+}
+```
+
+### Rešavanje Problema sa Dupliciranim Unosima Fajlova
+
+Može se pojaviti problem sa dupliciranim fajlovima prilikom kreiranja .jar fajla. Određeni fajlovi mogu biti prisutni više puta u različitim bibliotekama. Da biste rešili ovaj problem, postavite duplicatesStrategy za jar task:
+
+```kotlin
+tasks {
+    jar {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+    }
+}
+```
+
+### Izgradnja instalacije Plagina
+
+Nakon što napravite navedene promene u vašem build.gradle.kts skriptu, pratite ove korake kako biste izgradili plugin:
+
+1. Otvorite Terminal u IntelliJ IDEA.
+2. Pokrenite komandu `gradlew build`
+
+Alternativno, ukoliko vam je projekat plagina otvoren u razvojnom okruženju, možete i direktno da pokrenete jar task u sklopu Grejdlvog build ciklusa
+
+Ovo bi trebalo da izgradi vaš plugin, napravi .jar fajl sa potrebnim zavisnostima i reši potencijalni ClassNotFoundException.
+
+To je to! Uspešno ste izgradili IntelliJ IDEA plugin sa potrebnim zavisnostima. Kako modifikujete svoj plugin, nastavite sa izgradnjom i testiranjem kako je prikazano gore. Ako naiđete na greške u vezi sa nedostajućim potrebnim klasnim fajlovima tokom izvršavanja, prođite kroz korake dodavanja zavisnosti i uključivanja istih u vašu .jar izgradnju.
 
 
