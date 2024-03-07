@@ -297,4 +297,20 @@ Ovo bi trebalo da izgradi vaš plugin, napravi .jar fajl sa potrebnim zavisnosti
 
 To je to! Uspešno ste izgradili IntelliJ IDEA plugin sa potrebnim zavisnostima. Kako modifikujete svoj plugin, nastavite sa izgradnjom i testiranjem kako je prikazano gore. Ako naiđete na greške u vezi sa nedostajućim potrebnim klasnim fajlovima tokom izvršavanja, prođite kroz korake dodavanja zavisnosti i uključivanja istih u vašu .jar izgradnju.
 
+## Uputstvo za instalaciju Plagina za IntelliJ IDEA zasnovano na upotrebi lokalnog jar fajla:
 
+1. **Otvorite IntelliJ IDEA**: Pokrenite IntelliJ IDEA na svom računaru.
+
+2. **Otvorite Postavke (Settings)**: Ukoliko vam je već otvoren neki projekat, na vrhu ekrana, idite na opciju "File" (Fajl) pa zatim "Settings" (Postavke). Na MacOS računarima, umesto "File" koristite "IntelliJ IDEA", a zatim "Preferences". Ukoliko vam se otvori ekran dobrdošlice, ovaj korak možete da preskočite.
+
+3. **Pronađite Plugins (Dodaci)**: U dijalogu Postavki (Settings), sa leve strane pronađite opciju "Plugins" (Dodaci).
+
+4. **Izaberite opciju za instalaciju sa diska**: Na stranici Dodaci (Plugins), kliknite na dugme koje ima ikonu zupčanika, a zatim odaberite opciju "Install Plugin from Disk".
+
+5. **Izaberite Plugin fajl**: Pronađite lokaciju gde ste sačuvali fajl Plagina (može biti u ZIP ili JAR formatu), označite ga i kliknite na "OK".
+
+6. **Potvrdite promene**: Kliknite na "OK" u dijalogu Postavki (Settings/Preferences) kako biste sačuvali promene.
+
+7. **Ponovo pokrenite IntelliJ IDEA**: Ukoliko vas sistem obavesti da je potrebno ponovno pokretanje, kliknite na dugme za restartovanje IDE, u suprotnom ugasite i upalite ponovo IDE.
+
+Sada je Plugin uspešno instaliran i spreman za upotrebu.
