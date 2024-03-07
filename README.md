@@ -314,3 +314,9 @@ To je to! Uspešno ste izgradili IntelliJ IDEA plugin sa potrebnim zavisnostima.
 7. **Ponovo pokrenite IntelliJ IDEA**: Ukoliko vas sistem obavesti da je potrebno ponovno pokretanje, kliknite na dugme za restartovanje IDE, u suprotnom ugasite i upalite ponovo IDE.
 
 Sada je Plugin uspešno instaliran i spreman za upotrebu.
+
+## Student Use case dijagram
+![StudentUseCaseDiagram](https://github.com/RAFSoftLab/RAF-LMS/assets/37117249/c0626b81-3e6b-4c23-bf1e-a7df12ae75b7)
+
+## Dijagram aktivnosti studenta
+![DijagramAktivnostiStudenta](https://github.com/RAFSoftLab/RAF-LMS/assets/37117249/bca52050-e300-4450-89e8-cf744e565589)
