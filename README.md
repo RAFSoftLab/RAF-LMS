@@ -318,6 +318,6 @@ Sada je Plugin uspešno instaliran i spreman za upotrebu.
 ## Student Use case dijagram
 ![StudentUseCaseDijagram](https://github.com/RAFSoftLab/RAF-LMS/assets/37117249/c74ac2b8-3a9a-4951-b8ae-4fa6e0812172)
 
-## Dijagram aktivnosti studenta![Uploading DopunjeniStudentUseCaseDijagram.jpg…]()
+## Dijagram aktivnosti studenta
 
 ![DijagramAktivnostiStudenta](https://github.com/RAFSoftLab/RAF-LMS/assets/37117249/bca52050-e300-4450-89e8-cf744e565589)
