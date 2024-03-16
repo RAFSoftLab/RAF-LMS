@@ -11,6 +11,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class RafApiClient {
+    public static final String API_TOKEN = "L2aTA643Z0UJ43bIdBymFExVbpqZg7v5QJafYh6KFRjl04eV6w4TtdppkX41hEwo";
     private static final HttpClient CLIENT = HttpClient.newHttpClient();
 
     public static String getStudents() {
@@ -18,6 +19,56 @@ public class RafApiClient {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(Config.REST_API_BASE_URL))
+                    .setHeader("Authorization","Bearer "+ API_TOKEN)
+                    .build();
+            HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+            result = response.body();
+        } catch (IOException | InterruptedException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public static String authorizeStudent(String id) {
+        String result = null;
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(Config.REST_API_BASE_URL + "/" + id + "/authorize"))
+                    .setHeader("Authorization","Bearer "+ API_TOKEN)
+                    .POST(HttpRequest.BodyPublishers.ofString(""))
+                    .build();
+            HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+            result = response.body();
+        } catch (IOException | InterruptedException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public static String getRepository(String id,
+                                       String token,
+                                       String exam) {
+        String result = null;
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(Config.REST_API_BASE_URL + "/" + id + "/repository" + "/" + token + "/exam" + "/" + exam))
+                    .setHeader("Authorization","Bearer "+ API_TOKEN)
+                    .build();
+            HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+            result = response.body();
+        } catch (IOException | InterruptedException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public static String getFork(String id,
+                                       String token) {
+        String result = null;
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(Config.REST_API_BASE_URL + "/" + id + "/repository" + "/" + token + "/fork"))
+                    .setHeader("Authorization","Bearer "+ API_TOKEN)
                     .build();
             HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
             result = response.body();
