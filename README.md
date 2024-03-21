@@ -316,7 +316,7 @@ To je to! Uspešno ste izgradili IntelliJ IDEA plugin sa potrebnim zavisnostima.
 Sada je Plugin uspešno instaliran i spreman za upotrebu.
 
 ## Student Use case dijagram
-![StudentUseCaseDijagram](https://github.com/RAFSoftLab/RAF-LMS/assets/37117249/c74ac2b8-3a9a-4951-b8ae-4fa6e0812172)
+![StudentUseCaseDiagramWithExtends](https://github.com/RAFSoftLab/RAF-LMS/assets/37117249/482440a5-37b0-4348-bbce-e3ff60b42ec4)
 
 ## Dijagram aktivnosti studenta
 
