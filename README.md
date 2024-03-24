@@ -191,7 +191,7 @@ Povežite se sa Repozitorijumom
 
 Sada mozete klonirati repozitorijum sa servera sledecom komandom:
 ````
-git clone foo@SERVER_IP:/srv/project1.git
+git clone http://foo@SERVER_IP:/project1.git
 ````
 
 Bićete upitani za lozinku korisnika koju ste kreirali.
