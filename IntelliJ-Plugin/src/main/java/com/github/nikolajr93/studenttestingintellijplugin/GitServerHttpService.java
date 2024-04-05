@@ -12,14 +12,14 @@ import java.io.IOException;
 public class GitServerHttpService {
 
     public static void main(String[] args) {
-       cloneRepository(Config.SSH_LOCAL_PATH_1);
-       pushToRepository(Config.SSH_LOCAL_PATH_1, "test-branch","This is test commit");
+       cloneRepository(Config.SSH_LOCAL_PATH_1, "");
+//       pushToRepository(Config.SSH_LOCAL_PATH_1, "test-branch","This is test commit");
     }
 
-    public static void cloneRepository(String path) {
+    public static void cloneRepository(String path, String taskPath) {
         try {
             Git.cloneRepository()
-                    .setURI(Config.HTTP_REPO_URL)
+                    .setURI(Config.HTTP_REPO_URL + taskPath)
                     .setDirectory(new File(path))
                     .setCredentialsProvider(new UsernamePasswordCredentialsProvider(
                             Config.SERVER_USERNAME,

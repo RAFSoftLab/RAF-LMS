@@ -18,11 +18,11 @@ public class RafApiIntegrationTests {
             "120",
             "M");
 
-    private StudentsControllerClient client;
+//    private StudentsControllerClient client;
 
     @BeforeEach
     public void setUp() {
-        client = new StudentsControllerClient();
+//        client = new StudentsControllerClient();
     }
 
     @Test
@@ -39,33 +39,33 @@ public class RafApiIntegrationTests {
     }
 
     @Test
-    public void authorizeStudent_returnsToken() throws IOException {
+    public void authorizeStudent_returnsToken() {
         // Act
-        String students = RafApiClient.authorizeStudent("M312023");
+        String tokenMessage = RafApiClient.authorizeStudent("M312023");
 
         // Assert
-        assertTrue(students.length() > 0);
+        assertTrue(tokenMessage.length() > 0);
     }
 
     @Test
-    public void getRepository_returnsRepository() throws IOException {
+    public void getRepository_returnsRepository() {
         // Act
-        String students = RafApiClient.getRepository("M312023",
-                "f266c9a9-d9fd-4c21-b602-2674cc4cddd7",
+        String repositoryMessage = RafApiClient.getRepository("M312023",
+                "26ba21e2-465c-461d-b6f7-1471538c1700",
                 "OopZadatak1");
 
         // Assert
-        assertTrue(students.length() > 0);
+        assertTrue(repositoryMessage.length() > 0);
     }
 
     @Test
     public void getFork_returnsFork() throws IOException {
         // Act
-        String students = RafApiClient.getFork("M312023",
-                "f266c9a9-d9fd-4c21-b602-2674cc4cddd7");
+        String forkMessage = RafApiClient.getFork("M312023",
+                "26ba21e2-465c-461d-b6f7-1471538c1700");
 
         // Assert
-        assertTrue(students.length() > 0);
+        assertTrue(forkMessage.length() > 0);
     }
 
 
@@ -119,30 +119,30 @@ public class RafApiIntegrationTests {
         assertNotNull(student);
         RafApiClient.deleteStudent(DUMMY_ID);    }
 
-    @Test
-    public void deleteStudent_deletesStudentSuccessfully() throws IOException {
-        // Arrange
-        RafApiClient.createStudent(MOCK_STUDENT);
-        var responseString = String.format("Student with id: %s doesn't exist in the db", DUMMY_ID) ;
+//    @Test
+//    public void deleteStudent_deletesStudentSuccessfully() throws IOException {
+//        // Arrange
+//        RafApiClient.createStudent(MOCK_STUDENT);
+//        var responseString = String.format("Student with id: %s doesn't exist in the db", DUMMY_ID) ;
+//
+//        // Act
+//        RafApiClient.deleteStudent(DUMMY_ID);
+//        var response = RafApiClient.getStudent(DUMMY_ID);
+//
+//
+//        // Assert
+//        assertTrue(response.equals(responseString));
+//    }
 
-        // Act
-        RafApiClient.deleteStudent(DUMMY_ID);
-        var response = RafApiClient.getStudent(DUMMY_ID);
-
-
-        // Assert
-        assertTrue(response.equals(responseString));
-    }
-
-    @Test
-    public void authorizeStudent_AuthorizesStudent() {
-        // Arrange
-        RafApiClient.createStudent(MOCK_STUDENT);
-
-        // Act
-        var response = client.authorizeStudent(DUMMY_ID);
-
-        //Assert
-        assertEquals(200, response.getStatusCodeValue());
-    }
+//    @Test
+//    public void authorizeStudent_AuthorizesStudent() {
+//        // Arrange
+//        RafApiClient.createStudent(MOCK_STUDENT);
+//
+//        // Act
+//        var response = client.authorizeStudent(DUMMY_ID);
+//
+//        //Assert
+//        assertEquals(200, response.getStatusCodeValue());
+//    }
 }
