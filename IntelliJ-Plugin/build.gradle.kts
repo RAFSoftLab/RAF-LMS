@@ -11,6 +11,8 @@ plugins {
     alias(libs.plugins.changelog) // Gradle Changelog Plugin
     alias(libs.plugins.qodana) // Gradle Qodana Plugin
     alias(libs.plugins.kover) // Gradle Kover Plugin
+    // Adds 'java-library-distribution' plugin
+    `java-library-distribution`
 }
 
 group = properties("pluginGroup").get()
@@ -32,7 +34,7 @@ dependencies {
     //implementation("org.eclipse.jgit:org.eclipse.jgit:6.8.0.202311291450-r")
 //    implementation("org.eclipse.jgit:org.eclipse.jgit:5.5.+")
     implementation("org.eclipse.jgit:org.eclipse.jgit:5.5.+"){
-//        exclude(group = "org.slf4j")
+        exclude(group = "org.slf4j")
     }
 //    Old version
 //    implementation("org.apache.httpcomponents.client5:httpclient5-fluent:5.1.3")
@@ -145,5 +147,12 @@ tasks {
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
         channels = properties("pluginVersion").map { listOf(it.split('-').getOrElse(1) { "default" }.split('.').first()) }
+    }
+
+    // Extends the 'jar' task to include 'implementation' dependencies in the output JAR.
+    // Thus, the JGit library classes will be included in your plugin's .jar.
+    jar {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE // This will exclude the duplicates
+        from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
     }
 }

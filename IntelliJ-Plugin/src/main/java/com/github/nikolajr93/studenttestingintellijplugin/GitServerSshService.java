@@ -94,6 +94,9 @@ public class GitServerSshService {
         } catch (GitAPIException e) {
             System.err.println("Error cloning repository: " + e.getMessage());
             return false;
+        } catch (Exception e) {
+            System.err.println("Error cloning repository: " + e.getMessage());
+            return false;
         }
     }
 

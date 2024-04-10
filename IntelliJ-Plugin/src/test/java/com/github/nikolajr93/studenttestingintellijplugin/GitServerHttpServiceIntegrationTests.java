@@ -2,8 +2,8 @@ package com.github.nikolajr93.studenttestingintellijplugin;
 
 import org.junit.Test;
 
-import static com.github.nikolajr93.studenttestingintellijplugin.GitServerSshService.*;
-import static com.github.nikolajr93.studenttestingintellijplugin.GitServerSshService.cloneRepository2;
+import static com.github.nikolajr93.studenttestingintellijplugin.GitServerSshService.cloneRepository;
+import static com.github.nikolajr93.studenttestingintellijplugin.GitServerSshService.pushToRepository;
 import static org.junit.Assert.assertEquals;
 
 public class GitServerHttpServiceIntegrationTests {
@@ -12,13 +12,16 @@ public class GitServerHttpServiceIntegrationTests {
     @Test
     public void cloneRepositoryTest() {
         // Arrange and Act
-        var repositoryIsCloned = cloneRepository2(Config.SSH_LOCAL_PATH_1);
+//        var repositoryIsCloned = cloneRepository2(Config.SSH_LOCAL_PATH_1);
 //        var repositoryIsCloned = GitServerSshService.cloneRepository3(Config.SSH_LOCAL_PATH_1);
 //        var repositoryIsCloned = cloneRepository(Config.SSH_LOCAL_PATH_1);
-//        var repositoryIsCloned = GitServerHttpService.cloneRepository();
+//        var repositoryIsCloned = GitServerHttpService.cloneRepository(Config.SSH_LOCAL_PATH_1);
+        var repositoryIsCloned = GitServerHttpService.cloneRepository(Config.SSH_LOCAL_PATH_2);
+//        GitServerHttpService.cloneRepository(Config.SSH_LOCAL_PATH_1);
 
         // Assert
         assertEquals(repositoryIsCloned, true);
+//        assertTrue(repositoryIsCloned);
     }
 
     @Test

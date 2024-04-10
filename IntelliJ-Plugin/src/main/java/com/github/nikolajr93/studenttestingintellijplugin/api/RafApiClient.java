@@ -83,6 +83,7 @@ public class RafApiClient {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(Config.REST_API_BASE_URL + "/" + id))
+                    .setHeader("Authorization","Bearer "+ API_TOKEN)
                     .build();
             HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
             result = response.body();
