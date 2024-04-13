@@ -1,6 +1,7 @@
 package com.github.nikolajr93.studenttestingintellijplugin;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.api.PushCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
@@ -12,8 +13,8 @@ import java.io.IOException;
 public class GitServerHttpService {
 
     public static void main(String[] args) {
-       cloneRepository(Config.SSH_LOCAL_PATH_1, "");
-//       pushToRepository(Config.SSH_LOCAL_PATH_1, "test-branch","This is test commit");
+//       cloneRepository(Config.SSH_LOCAL_PATH_1, "zadatak-1-92a07e95-c5d5-4895-97d0-0bef6ae2e780.git");
+       pushToRepository(Config.SSH_LOCAL_PATH_1, "test-branch-4","This is test commit");
     }
 
     public static void cloneRepository(String path, String taskPath) {
@@ -34,12 +35,26 @@ public class GitServerHttpService {
 
     public static void pushToRepository(String path, String branchName, String message) {
         try (Git git = Git.open(new File(path))) {
-            // Add the sample file to the staging area
-            git.add().addFilepattern(".").call();
-            var branchCommand = git.branchCreate();
-            branchCommand.setName(branchName);
-            branchCommand.call();
+            boolean branchExists = false;
+            for (Ref ref : git.branchList().call()) {
+                if (ref.getName().endsWith(branchName)) {
+                    branchExists = true;
+                    break;
+                }
+            }
 
+            if (!branchExists) {
+                    git.checkout()
+                            .setCreateBranch(true)
+                            .setName(branchName)
+                            .call();
+            } else {
+                    git.checkout()
+                            .setName(branchName)
+                            .call();
+            }
+
+            git.add().addFilepattern(".").call();
 
             // Create a commit
             git.commit().setMessage(message).call();
