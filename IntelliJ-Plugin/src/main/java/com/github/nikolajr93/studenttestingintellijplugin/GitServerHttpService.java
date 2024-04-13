@@ -1,9 +1,10 @@
 package com.github.nikolajr93.studenttestingintellijplugin;
 
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.api.PushCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 import java.io.File;
@@ -11,11 +12,6 @@ import java.io.IOException;
 
 
 public class GitServerHttpService {
-
-    public static void main(String[] args) {
-//       cloneRepository(Config.SSH_LOCAL_PATH_1, "zadatak-1-92a07e95-c5d5-4895-97d0-0bef6ae2e780.git");
-       pushToRepository(Config.SSH_LOCAL_PATH_1, "test-branch-4","This is test commit");
-    }
 
     public static void cloneRepository(String path, String taskPath) {
         try {
@@ -52,6 +48,18 @@ public class GitServerHttpService {
                     git.checkout()
                             .setName(branchName)
                             .call();
+
+                PullResult result = git
+                        .pull()
+                        .setCredentialsProvider(new UsernamePasswordCredentialsProvider(
+                        Config.SERVER_USERNAME,
+                        Config.SERVER_PASSWORD))
+                        .call();
+                if(result.isSuccessful()) {
+                    System.out.println("Repository successfully updated");
+                } else {
+                    System.out.println("Pull failed, check conflicts and repository status");
+                }
             }
 
             git.add().addFilepattern(".").call();
