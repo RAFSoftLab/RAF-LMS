@@ -6,6 +6,7 @@ import com.github.nikolajr93.studenttestingintellijplugin.GitServerHttpService
 import com.github.nikolajr93.studenttestingintellijplugin.MyBundle
 import com.github.nikolajr93.studenttestingintellijplugin.api.RafApiClient
 import com.github.nikolajr93.studenttestingintellijplugin.api.Student
+import com.github.nikolajr93.studenttestingintellijplugin.api.StudentInfoDto
 import com.github.nikolajr93.studenttestingintellijplugin.services.MyProjectService
 import com.google.gson.Gson
 import com.intellij.openapi.application.ApplicationManager
@@ -51,6 +52,7 @@ class MyToolWindowFactory : ToolWindowFactory {
     private lateinit var studentReturnedJSONLocal: String
     private lateinit var localStudentObject: Student
     private lateinit var remoteStudentObject1: Student
+    private lateinit var remoteStudentObject2: StudentInfoDto
 
 //    private lateinit var objectMapper: ObjectMapper
     private lateinit var gson: Gson
@@ -79,28 +81,45 @@ class MyToolWindowFactory : ToolWindowFactory {
 
         isSuccess = false
 
-        studentReturnedJSONLocal = File(Config.STUDENT_INFO_FILE_PATH).readText()
-        localStudentObject = gson.fromJson(studentReturnedJSONLocal, Student::class.java)
-
-//        Za sledecu verziju povuci indeks studenta iz environment variabli (user sadrzi indeks)
-        var studentReturnedString = RafApiClient.getStudent(MyBundle.studentId)
-        MyBundle.returnedStudentString = studentReturnedString
-        remoteStudentObject1 = gson.fromJson(studentReturnedString, Student::class.java)
-        MyBundle.returnedStudent = remoteStudentObject1
-//        MyBundle.studentId = "M532023"
-
-        MyBundle.currUsername = System.getenv("username")
-        if(MyBundle.currUsername.contains("23")){
-            MyBundle.username = MyBundle.currUsername
-        }
-//        MyBundle.username = System.getenv("username")
+        var uname = System.getenv("username");
+//        MyBundle.username = uname
         MyBundle.computerName = System.getenv("computername")
+        if(MyBundle.computerName.startsWith("u", true)){
+            MyBundle.classroom = "Raf" + MyBundle.computerName.substring(2,3)
+        }
         var firstDigitPos = MyBundle.username.indexOfFirst { it.isDigit() }
         var lastDigitPos = MyBundle.username.indexOfLast { it.isDigit() }
         MyBundle.builtStudentId = MyBundle.username.substring(lastDigitPos+1).uppercase(Locale.getDefault()) +
 //                MyBundle.username.substring(firstDigitPos, lastDigitPos - 1) + "20" +
                 MyBundle.username.substring(firstDigitPos, lastDigitPos - 1) + LocalDate.now().year/100 +
                 MyBundle.username.substring(lastDigitPos -1, lastDigitPos +1)
+
+//        var firstDigitPos1 = uname.indexOfFirst { it.isDigit() }
+//        var lastDigitPos1 = uname.indexOfLast { it.isDigit() }
+//        MyBundle.builtStudentId = uname.substring(lastDigitPos1+1).uppercase(Locale.getDefault()) +
+////                MyBundle.username.substring(firstDigitPos, lastDigitPos - 1) + "20" +
+//                uname.substring(firstDigitPos1, lastDigitPos1 - 1) + LocalDate.now().year/100 +
+//                uname.substring(lastDigitPos1 -1, lastDigitPos1 +1)
+
+//        studentReturnedJSONLocal = File(Config.STUDENT_INFO_FILE_PATH).readText()
+//        localStudentObject = gson.fromJson(studentReturnedJSONLocal, Student::class.java)
+
+//        Za sledecu verziju povuci indeks studenta iz environment variabli (user sadrzi indeks)
+//        var studentReturnedString = RafApiClient.getStudent(MyBundle.studentId)
+        var studentReturnedString = RafApiClient.getStudent(MyBundle.builtStudentId)
+        MyBundle.returnedStudentString = studentReturnedString
+//        remoteStudentObject1 = gson.fromJson(studentReturnedString, Student::class.java)
+        remoteStudentObject2 = gson.fromJson(studentReturnedString, StudentInfoDto::class.java)
+//        MyBundle.returnedStudent = remoteStudentObject1
+        MyBundle.returnedStudent2 = remoteStudentObject2
+
+
+        MyBundle.currUsername = System.getenv("username")
+//        if(MyBundle.currUsername.contains("23")){
+        if(MyBundle.currUsername.length > 3){
+            MyBundle.username = MyBundle.currUsername
+        }
+
     }
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
@@ -113,16 +132,11 @@ class MyToolWindowFactory : ToolWindowFactory {
 
         // Create a panel to hold all components
         mainPanel = JPanel(BorderLayout())
-//        var mainPanel = JPanel(CardLayout())
 
-//        val afterClonedPanel = JPanel()
         this.afterClonedPanel = JPanel()
         afterClonedPanel.layout = BoxLayout(afterClonedPanel, BoxLayout.Y_AXIS)
         afterClonedPanel.border = BorderFactory.createEmptyBorder(10, 20, 10, 20)
 
-//        val formPanel = JPanel()
-//        this.formPanel = JPanel()
-//        formPanel.layout = BoxLayout(formPanel, BoxLayout.Y_AXIS)
         this.formPanel = JPanel(BorderLayout())
         formPanel.border = BorderFactory.createEmptyBorder(10, 20, 10, 20)
 
@@ -135,56 +149,45 @@ class MyToolWindowFactory : ToolWindowFactory {
         // Add input fields labels
         studentsFirstNameTF = JTextField(20)
         studentsFirstNameTF.preferredSize = Dimension(300,24)
-//        formPanel.add(makeField("Student Index:", studentIndexInput))
-        studentsFirstNameTF.text = localStudentObject.firstName
+
+        studentsFirstNameTF.text = remoteStudentObject2.firstName
         fieldsPanel.add(makeField("First name:", studentsFirstNameTF))
-//        fieldsPanel.add(JLabel("Student Index:"))
-//        fieldsPanel.add(studentIndexInput)
+
 
         studentsLastNameTF = JTextField(20)
         studentsLastNameTF.preferredSize = Dimension(300, 24)
-        studentsLastNameTF.text = localStudentObject.lastName
+//        studentsLastNameTF.text = localStudentObject.lastName
+        studentsLastNameTF.text = remoteStudentObject2.lastName
         fieldsPanel.add(makeField("Last name:", studentsLastNameTF))
 
         this.studentEnrollmentInfoPanel = JPanel(GridLayout(0,3))
 
         studentsStudyProgramTF = JTextField(20)
         studentsStudyProgramTF.preferredSize = Dimension(300, 24)
-//        fieldsPanel.add(makeField("Study program:", studentsLastNameTF))
-        studentsStudyProgramTF.text = localStudentObject.studyProgram
+
+        studentsStudyProgramTF.text = remoteStudentObject2.studyProgramShort
         studentEnrollmentInfoPanel.add(makeField("Program:", studentsStudyProgramTF))
-//        studentEnrollmentInfoPanel.add(makeSmallField("Program:", studentsStudyProgramTF))
 
         studentsIndexNumberTF = JTextField(20)
         studentsIndexNumberTF.preferredSize = Dimension(300, 24)
-//        fieldsPanel.add(makeField("Index number:", studentsIndexNumberTF))
-        studentsIndexNumberTF.text = localStudentObject.indexNumber.toString()
-        studentEnrollmentInfoPanel.add(makeSmallField("Number:", studentsIndexNumberTF))
-//        studentEnrollmentInfoPanel.add(makeSmallField("No.", studentsIndexNumberTF))
 
-//        fieldsPanel.add(studentEnrollmentInfoPanel)
+        studentsIndexNumberTF.text = remoteStudentObject2.indexNumber.toString()
+        studentEnrollmentInfoPanel.add(makeSmallField("Number:", studentsIndexNumberTF))
 
         studentsStartYearTF = JTextField(20)
         studentsStartYearTF.preferredSize = Dimension(300, 24)
-        studentsStartYearTF.text = localStudentObject.startYear
-//        fieldsPanel.add(makeField("Enrollment year:", studentsStartYearTF))
+        studentsStartYearTF.text = remoteStudentObject2.startYear
         studentEnrollmentInfoPanel.add(makeSmallField("Year:", studentsStartYearTF))
-//        studentEnrollmentInfoPanel.add(makeSmallField("Year:", studentsStartYearTF))
 
         fieldsPanel.add(studentEnrollmentInfoPanel)
 
-//        this.studentsTestSpecificPanel = JPanel(GridLayout(0,3))
-//        this.studentsTestSpecificPanel = JPanel(GridLayout(0,4))
         this.studentsTestSpecificPanel = JPanel(GridLayout(0,5))
-//        this.studentsTestSpecificPanel = JPanel(GridBagLayout())
 
 
         classroomNameTF = JTextField(20)
         classroomNameTF.preferredSize = Dimension(300, 24)
-        classroomNameTF.text = localStudentObject.classroom
-//        studentsTestSpecificPanel.add(makeField("Classroom:", classroomNameTF))
-//        studentsTestSpecificPanel.add()
 
+        classroomNameTF.text = MyBundle.classroom
 
         val classroomLabelText = JLabel("Classroom:")
         classroomLabelText.minimumSize = Dimension(20, classroomLabelText.minimumSize.height)
@@ -196,9 +199,6 @@ class MyToolWindowFactory : ToolWindowFactory {
         studentsTestSpecificPanel.add(classroomLabelText)
         studentsTestSpecificPanel.add(classroomNameTF)
 
-//        this.comboBoxPanel = JPanel(GridLayout(0, 2))
-
-//        val testGroupLabelText = JLabel("Test group:")
         val testGroupLabelText = JLabel("Asgmt. grp:")
         testGroupLabelText.minimumSize = Dimension(20, testGroupLabelText.minimumSize.height)
         testGroupLabelText.preferredSize = Dimension(70, testGroupLabelText.preferredSize.height)
@@ -214,7 +214,8 @@ class MyToolWindowFactory : ToolWindowFactory {
                 EmptyBorder(0, 0, 0, 10),  // Padding around the label
                 EmptyBorder(0, 0, 0, 0))
 
-        val assignmentChoices = arrayOf("Grupa 1", "Grupa 2", "Grupa 3", "Grupa 4", "Grupa 5", "Grupa 6")
+
+        val assignmentChoices = arrayOf("Grupa 1", "Grupa 2", "Grupa 3", "Grupa 4")
         val subjectChoices = arrayOf("OOP", "VP", "NVP", "MSA", "SK", "TS")
         // Create a JComboBox with the choices
         testGroupCB = JComboBox(assignmentChoices)
@@ -241,9 +242,9 @@ class MyToolWindowFactory : ToolWindowFactory {
         val signInButton = JButton("Begin")
         signInButton.addActionListener {
 
-            studentsIndexCombined = studentsStudyProgramTF.getText().uppercase(Locale.getDefault()) + studentsIndexNumberTF.getText() + studentsStartYearTF.getText();
-
-            studentReturnedJSON = RafApiClient.getStudent(studentsIndexCombined)
+//            studentsIndexCombined = studentsStudyProgramTF.getText().uppercase(Locale.getDefault()) + studentsIndexNumberTF.getText() + studentsStartYearTF.getText();
+//
+//            studentReturnedJSON = RafApiClient.getStudent(studentsIndexCombined)
 //            studentReturnedJSONLocal = File(Config.STUDENT_INFO_FILE_PATH).readText()
 ////            localStudentObject = objectMapper.readValue(studentReturnedJSON, Student::class.java)
 //            //  Ukloniti znakove naovdnika oko null vrednosti u JSON fajlu
@@ -251,34 +252,33 @@ class MyToolWindowFactory : ToolWindowFactory {
 //            localStudentObject = gson.fromJson(studentReturnedJSONLocal, Student::class.java)
 
 
-            var isFirstNameTheSame = localStudentObject.firstName.equals(studentsFirstNameTF.getText(), true)
-            var isLastNameTheSame = localStudentObject.lastName.equals(studentsLastNameTF.getText(), true)
+//            var isFirstNameTheSame = localStudentObject.firstName.equals(studentsFirstNameTF.getText(), true)
+            var isFirstNameTheSame = remoteStudentObject2.firstName.equals(studentsFirstNameTF.getText(), true)
+//            var isLastNameTheSame = localStudentObject.lastName.equals(studentsLastNameTF.getText(), true)
+            var isLastNameTheSame = remoteStudentObject2.lastName.equals(studentsLastNameTF.getText(), true)
 
             var projectToOpen = "C:\\Projects\\GitTest"
 
             if(isFirstNameTheSame && isLastNameTheSame){
-//                localStudentObject.classroom = classroomNameTF.getText()
-                localStudentObject.taskGroup = testGroupCB.selectedItem.toString()
-                val studentInfoFilePath = Paths.get(Config.STUDENT_INFO_FILE_PATH1)
-                val studentInfoFilePath2 = Paths.get(Config.STUDENT_INFO_FILE_PATH2)
-                val studentTokenMessagePath = Paths.get(Config.STUDENT_TOKEN_MESSAGE_PATH)
-                val studentTokenMessagePathForAfterReset = Paths.get(Config.STUDENT_TOKEN_MESSAGE_PATH_AFTER_RESET)
-                val studentRepoAndForkMessagesPath = Paths.get(Config.STUDENT_REPO_AND_FORK_MESSAGES_PATH)
-                Files.newBufferedWriter(studentInfoFilePath).use { writer ->
-//                    writer.write(studentReturnedJSON)
-                    writer.write(gson.toJson(localStudentObject))
-//                    writer.newLine()
-                }
                 val currentProject1 = project
+                val studentInfoFilePath = Paths.get(currentProject1?.basePath, "..")
+                val finalStudentInfoFilePath = studentInfoFilePath.resolve("studentInfo1.txt").toAbsolutePath().normalize()
+                val finalStudentInfoFilePath2 = studentInfoFilePath.resolve("studentInfo2.txt").toAbsolutePath().normalize()
+                val finalStudentTokenMessagePath = studentInfoFilePath.resolve("studentTokenMessage.txt").toAbsolutePath().normalize()
+                val finalStudentTokenMessagePathForAfterReset = studentInfoFilePath.resolve("studentTokenMessageAfterReset.txt").toAbsolutePath().normalize()
+                val finalStudentRepoAndForkMessagesPath = studentInfoFilePath.resolve("studentRepoAndForkMessages.txt").toAbsolutePath().normalize()
+                Files.newBufferedWriter(finalStudentInfoFilePath).use { writer ->
+                    writer.write(gson.toJson(remoteStudentObject2))
+                }
+
 
                 // Setting current project base path in MyBundle for future commits
                 MyBundle.currentProjectBasePath = currentProject1?.basePath.toString()
 //                Upisivanje dohvacenog studenta
-                Files.newBufferedWriter(studentInfoFilePath2).use { writer ->
-//                    writer.write(studentReturnedJSON)
+                Files.newBufferedWriter(finalStudentInfoFilePath2).use { writer ->
                     writer.write(MyBundle.returnedStudentString)
                     writer.newLine()
-                    writer.write(gson.toJson(MyBundle.returnedStudent))
+                    writer.write(gson.toJson(MyBundle.returnedStudent2))
                     writer.newLine()
                     writer.write(MyBundle.builtStudentId)
                     writer.newLine()
@@ -289,10 +289,11 @@ class MyToolWindowFactory : ToolWindowFactory {
                     writer.write(MyBundle.currUsername)
                 }
 
-                var tempStudentTokenMessageReturned = RafApiClient.authorizeStudent(MyBundle.studentId)
-                if(!tempStudentTokenMessageReturned.contains("is already authorized")){
+                var tempStudentTokenMessageReturned = RafApiClient.authorizeStudent(MyBundle.builtStudentId)
+                if(tempStudentTokenMessageReturned.contains("is already authorized")){
+                    MyBundle.strictStudentToken = File(finalStudentTokenMessagePath.toUri()).readText()
+                }else{
                     MyBundle.studentToken = tempStudentTokenMessageReturned
-//                    Regex for UUID parsing
                     // Regular expression to extract the token value
                     val regex = Regex("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}")
                     // Find the token value in the MyBundle.studentToken
@@ -302,22 +303,13 @@ class MyToolWindowFactory : ToolWindowFactory {
                     if (onlyTokenValue != null) {
                         MyBundle.strictStudentToken = onlyTokenValue
                     }
-                    // Alternative parsing
-                    val jsonString = MyBundle.studentToken
-                    val decodedString = jsonString.replace("\\\"", "\"")
-                    val tokenT = decodedString.split("\"value\":\"")[1].split("\"")[0]
-                    MyBundle.strictStudentTokenAlternative = tokenT
-//                  Upisivanje dohvacene poruke sa studentskim tokenom
-                    Files.newBufferedWriter(studentTokenMessagePath).use { writer ->
-                        writer.write(MyBundle.studentToken)
-                        writer.newLine()
+                    Files.newBufferedWriter(finalStudentTokenMessagePath).use { writer ->
                         writer.write(MyBundle.strictStudentToken)
-                        writer.newLine()
-                        writer.write(MyBundle.strictStudentTokenAlternative)
                     }
+                }
                     MyBundle.examString = "OopZadatak" + (testGroupCB.selectedIndex + 1)
-                    val testRepoMessageString = RafApiClient.getRepository(MyBundle.studentId, MyBundle.strictStudentToken, MyBundle.examString)
-                    val studentForkMessageString = RafApiClient.getFork(MyBundle.studentId, MyBundle.strictStudentToken)
+                    val testRepoMessageString = RafApiClient.getRepository(MyBundle.builtStudentId, MyBundle.strictStudentToken, MyBundle.examString)
+                    val studentForkMessageString = RafApiClient.getFork(MyBundle.builtStudentId, MyBundle.strictStudentToken)
                     MyBundle.testRepoMessage = testRepoMessageString
                     MyBundle.studentForkMessage = studentForkMessageString
 //                    Test repo path parsing
@@ -330,7 +322,7 @@ class MyToolWindowFactory : ToolWindowFactory {
                     val decodedForkPathString = forkPathString.replace("\\\"", "\"")
                     val forkPathValue = decodedForkPathString.split("\"message\":\"\"")[1].dropLast(3)
                     MyBundle.studentForkPath = forkPathValue
-                    Files.newBufferedWriter(studentRepoAndForkMessagesPath).use { writer ->
+                    Files.newBufferedWriter(finalStudentRepoAndForkMessagesPath).use { writer ->
                         writer.write(MyBundle.testRepoMessage)
                         writer.newLine()
                         writer.write(MyBundle.studentForkMessage)
@@ -338,22 +330,13 @@ class MyToolWindowFactory : ToolWindowFactory {
                         writer.write(MyBundle.testRepoPath)
                         writer.newLine()
                         writer.write(MyBundle.studentForkPath)
+                        writer.newLine()
+                        writer.write("Exam string: " + MyBundle.examString)
                     }
-                }else{
-                    Files.newBufferedWriter(studentTokenMessagePathForAfterReset).use { writer ->
-                        writer.write(MyBundle.studentToken)
-//                    writer.newLine()
-                    }
-                }
 
                 // Run the clone operation in a worker thread to avoid blocking the UI.
                 ApplicationManager.getApplication().executeOnPooledThread {
                     // Calls the 'cloneRepository' method which is a blocking operation
-//                    val isSuccess = GitServerSshService.cloneRepository(Config.SSH_LOCAL_PATH_1)
-//                    val isSuccess = GitServerSshService.cloneRepository2(Config.SSH_LOCAL_PATH_1)
-//                    isSuccess = GitServerHttpService.cloneRepository(Config.SSH_LOCAL_PATH_1)
-//                    Liniju ispod ukloniti i zameniti linijom iznad kada Git proradi
-//                    isSuccess = GitServerHttpService.cloneRepository(Config.SSH_LOCAL_PATH_2)
 
                     val currentProjectt = project
                     val projectDirr = currentProjectt?.basePath?.let { Paths.get(it) }
@@ -362,10 +345,7 @@ class MyToolWindowFactory : ToolWindowFactory {
                             ?.forEach { it.deleteRecursively() }
 
 //                    Working lines:
-//                    isSuccess = GitServerHttpService.cloneRepository(Config.SSH_LOCAL_PATH_1)
-                    isSuccess = GitServerHttpService.cloneRepository(project.basePath!!)
-//                    Liniju ispod ukloniti kada Git proradi:
-//                    isSuccess = true;
+                    isSuccess = GitServerHttpService.cloneRepositoryN(project.basePath!!, MyBundle.testRepoPath)
                     // `invokeLater` schedules this task to run on the Event Dispatch Thread (EDT).
                     ApplicationManager.getApplication().invokeLater {
                         cloningReportArea.text = if (isSuccess) "Repository cloned successfully." else "Failed to clone repository."
@@ -377,21 +357,6 @@ class MyToolWindowFactory : ToolWindowFactory {
                             studentsStartYearTF.isEnabled = false
                             classroomNameTF.isEnabled = false
                             testGroupCB.isEnabled = false
-                            projectToOpen = Config.SSH_LOCAL_PATH_1;
-                            //  Opening the new project
-//                            ApplicationManager.getApplication().invokeLater(Runnable {
-//                                ApplicationManager.getApplication().runReadAction {
-//                                    // Get the currently opened projects
-//                                    val openProjects = projectManager.openProjects
-////                    val openProjects = projectManagerEx.openProjects
-//
-//                                    if (openProjects.none { it.projectFilePath == projectToOpen }) {
-//                                        projectManager.loadAndOpenProject(projectToOpen)
-////                        projectManagerEx.openProject(Paths.get(projectToOpen), OpenProjectTask(forceOpenInNewFrame = false))
-//                                    }
-//                                }
-//                            })
-
                             //  Overwriting the opened project
                             ApplicationManager.getApplication().executeOnPooledThread {
 //                                val isSuccess = GitServerHttpService.cloneRepository(Config.SSH_LOCAL_PATH_1)
@@ -422,11 +387,6 @@ class MyToolWindowFactory : ToolWindowFactory {
                                     })
                                 }
                             }
-                        }else{
-                            val openProjects = projectManager.openProjects
-                            if (openProjects.none { it.projectFilePath == projectToOpen }) {
-                                projectManager.loadAndOpenProject(projectToOpen)
-                            }
                         }
                     }
                 }
@@ -451,14 +411,10 @@ class MyToolWindowFactory : ToolWindowFactory {
             // Start a background thread for the blocking operations
             ApplicationManager.getApplication().executeOnPooledThread {
                 // Use the project base path as the repository path. Replace "newBranch" with the desired branch name.
-//                val isSuccess = GitServerSshService.pushToRepository2(
-//                Dodati kredencijale u commit msg
-//                Staviti Forkstring kao naziv brancha
-                val isPushSuccess = GitServerHttpService.pushToRepository(
-//                        Config.SSH_LOCAL_PATH_1,
+                val isPushSuccess = GitServerHttpService.pushToRepositoryN(
                         MyBundle.currentProjectBasePath,
-                        "student1Branch",
-                        "Initial commit"
+                        MyBundle.builtStudentId,
+                        MyBundle.username + " je predao rad."
                 )
 
                 // If the push operation is successful, close and dispose of the project
@@ -476,9 +432,6 @@ class MyToolWindowFactory : ToolWindowFactory {
                             ProjectManager.getInstance().closeAndDispose(currentProject)
                         }
                     }
-//                    ApplicationManager.getApplication().invokeLater {
-//                        ProjectManager.getInstance().closeAndDispose(currentProject)
-//                    }
                 } else {
                     // Handle failure - this prints an error to the console, but you'll likely want to replace this with your own error handling
                     println("Failed to push changes to new branch.")
@@ -498,11 +451,6 @@ class MyToolWindowFactory : ToolWindowFactory {
                     }
                 }
             }
-
-//            // Close and dispose of the project (Deprecated)
-//            ApplicationManager.getApplication().invokeLater {
-//                ProjectManager.getInstance().closeAndDispose(currentProject)
-//            }
         }
 
         fieldsPanel.add(signInButton)
@@ -511,18 +459,11 @@ class MyToolWindowFactory : ToolWindowFactory {
             commitButton.isVisible = true
         }
         fieldsPanel.add(commitButton)
-        //Staro
-//        formPanel.add(commitButton)
-//        formPanel.add(fieldsPanel, BorderLayout.NORTH)
-
-//        afterClonedPanel.add(commitButton)
 
         val checkProjectButton = JButton("Check Project")
 
         initialPanel.add(Label(System.getProperty("user.name")))
         initialPanel.add(checkProjectButton)
-        //Saro, sa init panelom
-//        mainPanel.add(initialPanel, BorderLayout.NORTH)
 
         mainPanel.add(fieldsPanel, BorderLayout.NORTH)
 
@@ -531,8 +472,6 @@ class MyToolWindowFactory : ToolWindowFactory {
         val content = contentFactory.createContent(mainPanel, "", false)
         toolWindow.contentManager.addContent(content)
 
-//        val content = ContentFactory.getInstance().createContent(myToolWindow.getContent(), null, false)
-//        toolWindow.contentManager.addContent(content)
     }
 
     private fun makeField(name: String, field: JTextField): JPanel {

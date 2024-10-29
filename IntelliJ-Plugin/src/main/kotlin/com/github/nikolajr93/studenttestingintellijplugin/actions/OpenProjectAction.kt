@@ -9,23 +9,6 @@ import com.intellij.openapi.vfs.VirtualFile
 
 class OpenProjectAction : AnAction() {
 
-//    override fun actionPerformed(event: AnActionEvent) {
-//        val application = ApplicationManager.getApplication()
-//
-//        // This is the path to the local project that you want to open
-////        val projectPath = "<PROJECT_PATH>"
-//        val projectPath = "C:\\Users\\P53\\Documents\\RAF\\NVPTest\\restDemo"
-//
-//        val virtualFile: VirtualFile? = LocalFileSystem.getInstance().refreshAndFindFileByPath(projectPath)
-//
-//        if (virtualFile != null) {
-//            application.invokeAndWait {
-//                application.runWriteAction {
-//                    ProjectManager.getInstance().loadAndOpenProject(projectPath)
-//                }
-//            }
-//        }
-//    }
         override fun actionPerformed(event: AnActionEvent){
             val projectToOpen = "C:\\Users\\P53\\Documents\\RAF\\NVPTest\\restDemo"
             val projectManager = ProjectManager.getInstance()
