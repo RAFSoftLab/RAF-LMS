@@ -29,7 +29,7 @@ public class GitServerHttpService {
                     .setURI(Config.HTTP_REPO_URL + taskPath)
                     .setDirectory(new File(path))
                     .setCredentialsProvider(new UsernamePasswordCredentialsProvider(
-                            Config.SERVER_USERNAME,
+                            Config.SERVER_GIT_USERNAME,
                             Config.SERVER_PASSWORD))
                     .call();
 
@@ -76,7 +76,7 @@ public class GitServerHttpService {
                 PullResult result = git
                         .pull()
                         .setCredentialsProvider(new UsernamePasswordCredentialsProvider(
-                        Config.SERVER_USERNAME,
+                        Config.SERVER_GIT_USERNAME,
                         Config.SERVER_PASSWORD))
                         .call();
                 if(result.isSuccessful()) {
@@ -94,7 +94,7 @@ public class GitServerHttpService {
             // Push to the repository
             PushCommand pushCommand = git.push();
             pushCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(
-                    Config.SERVER_USERNAME,
+                    Config.SERVER_GIT_USERNAME,
                     Config.SERVER_PASSWORD));
             pushCommand.call();
 
@@ -105,31 +105,71 @@ public class GitServerHttpService {
     }
 
     /**
-     * Clones a repository from the source directory and creates a forked repository in the destination directory.
+     * Creates a student-specific fork of a repository and clones it locally.
      *
-     * @param sourceDirPath The source directory path of the original repository.
-     *                      Example: "/srv/git/OOP/2024_25/Prvi ispit"
-     * @param destinationDirPath The destination directory path for the forked repository.
-     *                           Example: "/srv/git/OOP/2024_25/Prvi ispit/Studentska_resenja"
-     * @param name The name to give the forked repository.
-     *             Example: Petar_Petrovic_M_41_23
+     * @param sourceRepoUrl The source repository URL
+     *                      Example: ""http://abc@100.000.000.00/OOP/2024_25/Prvi_ispit/15"
+     * @param studentId The unique student identifier
+     *                 Example: "Petar_Petrovic_M_41_23"
+     * @param localPath The local directory path where the repository should be cloned
+     *                 Example: "C:\\Projects\\GitTest800"
      */
-    public static void cloneAndForkRepository(String sourceDirPath, String destinationDirPath, String name) {
+    public static void forkAndCloneRepository(String sourceRepoUrl, String studentId, String localPath) {
         try {
-            // Clone repository from source
+            String forkUrl = constructForkUrl(sourceRepoUrl, studentId);
+            System.out.println("Fork URL: " + forkUrl);
+
+            String forkPath = getForkPathFromUrl(forkUrl);
+
+            System.out.println("Creating student directory at: " + forkPath);
+
+            String host = Config.SERVER_HOST;
+            int port = 22;
+            String username = Config.SERVER_USERNAME;
+            String password = Config.SERVER_PASSWORD;
+
+            // Execute the script
+            String output = RemoteScriptExecutor.runRemoteScript(
+                    host, port, username, password,
+                    Config.REMOTE_SCRIPT_2,
+                    forkPath + " " + sourceRepoUrl
+            );
+            System.out.println("Script output:\n" + output);
+
+            System.out.println("Cloning to local machine...");
             Git.cloneRepository()
-                    .setURI(sourceDirPath)
-                    .setDirectory(new File(destinationDirPath + File.separator + name))
+                    .setURI(forkUrl)
+                    .setDirectory(new File(localPath))
                     .setCredentialsProvider(new UsernamePasswordCredentialsProvider(
-                            Config.SERVER_USERNAME,
+                            Config.SERVER_GIT_USERNAME,
                             Config.SERVER_PASSWORD))
                     .call();
 
-            System.out.println("Repository cloned and forked successfully at: " +
-                    destinationDirPath + File.separator + name);
-        } catch (GitAPIException e) {
-            System.err.println("Error cloning and forking repository: " + e.getMessage());
+            System.out.println("Repository cloned locally to: " + localPath);
+
+        } catch (Exception e) {
+            System.err.println("Error in fork and clone operation: " + e.getMessage());
+            e.printStackTrace();
         }
+    }
+
+    /**
+     * Constructs the URL for the student's fork.
+     */
+    private static String constructForkUrl(String sourceRepoUrl, String studentId) {
+        // Remove trailing slash if present
+        sourceRepoUrl = sourceRepoUrl.replaceAll("/$", "");
+        return sourceRepoUrl + "/Studentska_resenja/" + studentId;
+    }
+
+    /**
+     * Extracts the filesystem path from a Git URL.
+     */
+    private static String getForkPathFromUrl(String url) {
+        // Convert URL format to filesystem path
+        // Add /srv/git prefix and remove the http part
+        // Example: "http://abc@100.000.000.00/OOP/2024_25/..." -> "/srv/git/OOP/2024_25/..."
+        return "/srv/git" + url.replaceAll("http://[^/]+", "");
     }
 
     /**
@@ -149,7 +189,7 @@ public class GitServerHttpService {
 
             git.push()
                     .setCredentialsProvider(new UsernamePasswordCredentialsProvider(
-                            Config.SERVER_USERNAME,
+                            Config.SERVER_GIT_USERNAME,
                             Config.SERVER_PASSWORD))
                     .call();
 
