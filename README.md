@@ -203,6 +203,76 @@ Kako biste mogli da commitujete na server, izvrsite sledecu komandu:
 git remote add origin http://foo@SERVER_IP/project1.git
 ````
 
+## Kreiranje Forkovanog Git Repozitorijuma za Studenta
+
+### Opis Funkcionalnosti
+RAF-LMS omogućava svakom studentu da automatski dobije sopstveni fork Git repozitorijuma na serveru, koji se potom klonira na njihov računar. Student koristi ovaj repozitorijum za preuzimanje zadataka i push-ovanje svojih rešenja nazad na server.
+
+Ovaj proces se obavlja kroz dve ključne metode:
+
+1. `forkAndCloneRepository` – Kreira personalizovani repozitorijum za studenta na serveru i automatski ga klonira na računar studenta.
+2. `pushChangesToForkedRepo` – Omogućava studentu da push-uje svoja rešenja nazad u svoj forkovani repozitorijum.
+
+### Koraci Procesa
+1. Kreiranje i kloniranje studentskog repozitorijuma:
+
+- Metoda `forkAndCloneRepository` automatski:
+  - Kreira studentski repozitorijum na serveru (fork originalnog repozitorijuma predmeta).
+  - Klonira taj repozitorijum na računar studenta.
+- Nakon kloniranja, student ima lokalnu kopiju repozitorijuma sa zadacima.
+
+2. Push-ovanje rešenja nazad na server:
+
+  - Student koristi metodu `pushChangesToForkedRepo` da pošalje svoje promene nazad na server.
+  - Sve promene se beleže u Git istoriji, omogućavajući praćenje razvoja rešenja.
+
+### Primer Korisničkog Scenarija
+1. Kreiranje i kloniranje studentskog repozitorijuma:
+
+Na početku ispita ili kolokvijuma, nastavnik ili sistem automatski pokreću proces kreiranja i kloniranja repozitorijuma za studenta.
+Nakon toga, student na svom računaru ima direktorijum koji sadrži zadatke.
+
+2. Izrada zadataka:
+
+Student rešava zadatke lokalno u svom razvojnom okruženju.
+
+3. Push-ovanje rešenja:
+
+Nakon završetka zadatka, student koristi metodu pushChangesToForkedRepo da push-uje svoje promene nazad na server:
+  - Sve promene se čuvaju u njegovom forkovanom repozitorijumu.
+  - Ove promene su dostupne nastavnicima za pregled i ocenjivanje.
+
+### Prednosti za Studente
+Automatsko kreiranje i kloniranje:
+Studenti ne moraju ručno da kreiraju ili preuzimaju repozitorijume – sistem sve obavlja automatski.
+
+Transparentnost i sigurnost:
+Promene se čuvaju u Git istoriji, čime je omogućeno vraćanje na prethodne verzije ako je potrebno.
+
+Rad u poznatom okruženju:
+Studenti mogu da koriste svoje razvojno okruženje, radeći direktno sa lokalnim Git repozitorijumom.
+
+### Prednosti za Nastavnike
+Centralizovano upravljanje:
+Svi studentski repozitorijumi nalaze se na serveru, olakšavajući nastavnicima pregled i ocenjivanje.
+
+Praćenje napretka:
+Nastavnici mogu da pregledaju promene u kodu studenta tokom celog ispita ili kolokvijuma.
+
+### Potencijalni Problemi i Rešenja
+1. Problemi sa kloniranjem:
+Ako student ne može da klonira repozitorijum, proveriti:
+  - Ispravnost HTTP URL-a.
+  - Postojanje repozitorijuma na serveru.
+
+2. Problemi sa push-ovanjem:
+Ako push ne uspe, proveriti:
+  - Tačnost korisničkih podataka za autentifikaciju.
+  - Dozvole na serveru.
+
+3. Greške u kreiranju repozitorijuma:
+Ako udaljena skripta za kreiranje repozitorijuma ne uspe, proveriti sudo privilegije i vlasništvo direktorijuma na serveru.
+
 ## Uputstvo za isporučivanje Plagina za IntelliJ IDEA
 
 ### Sadržaj
