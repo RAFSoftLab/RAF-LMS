@@ -156,7 +156,7 @@ public class GitServerSshService {
     private static void gitPushToRepository(Git git) throws GitAPIException {
         // Configure credentials (replace with your username and password)
         CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(
-                Config.SERVER_USERNAME,
+                Config.SERVER_GIT_USERNAME,
                 Config.SERVER_PASSWORD);
 
         // Push to the remote repository
